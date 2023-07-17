@@ -1,12 +1,26 @@
 {
-  outputs = { nixpkgs, self }:
+  outputs = { self, nixpkgs }:
   let
     system = "x86_64-linux";
-    pkgs = import nixpkgs { inherit system; };
+    pkgs = import nixpkgs {
+      system = system;
+    };
+    mkShell = nixpkgs.mkShell.override {
+      stdenv = nixpkgs.stdenvAdapters.useMoldLinker nixpkgs.stdenv;
+    };
   in
   {
     devShells.${system}.default = pkgs.mkShell {
-      nativeBuildInputs = with pkgs; [ cargo rustc rustfmt rust-analyzer ];
+      buildInputs = [
+        pkgs.mold
+        pkgs.pkgconfig
+        pkgs.openssl.dev
+        pkgs.sqlite.dev
+        pkgs.cargo
+        pkgs.rustc
+        pkgs.rustfmt
+        pkgs.rust-analyzer
+      ];
     };
   };
 }
