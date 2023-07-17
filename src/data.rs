@@ -78,6 +78,9 @@ pub fn git_push() -> Program {
                 "p" "origin/master" => Action::Run { exit: false },
                 "u" "upstream" => Action::Run { exit: false },
                 "p" "elsewhere" => Action::Run { exit: false },
+
+            group "Shell actions":
+                "q/Esc" "quit shell" => Action::Escape,
         },
     }
 }
